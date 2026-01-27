@@ -2,7 +2,7 @@ name: Deploy React App to Proxmox
 
 on:
   push:
-    branches: [ main , master ]
+    branches: [main, master]
 
 jobs:
   build-deploy:
@@ -14,7 +14,7 @@ jobs:
       uses: actions/checkout@v4
     
     # 2. Construire l'image Docker
-    - name: Build Docker Imageeeeeeeeeeeeeeeee
+    - name: Build Docker Image
       run: |
         docker build -t ${{ secrets.DOCKER_USERNAME }}/sasalm:latest .
     
@@ -24,14 +24,14 @@ jobs:
         echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
         docker push ${{ secrets.DOCKER_USERNAME }}/sasalm:latest
     
-    # 4. Déployer sur Proxmox VM (avec MOT DE PASSE)
+    # 4. Déployer sur Proxmox VM
     - name: Deploy to Proxmox VM
       uses: appleboy/ssh-action@v1.0.0
       with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY}}  # ← CHANGEMENT IMPORTANT
-        port: ${{ secrets.SSH_PORT || 22 }}
+        host: "135.125.4.184"          # ← TON IP FIXE
+        username: "tython"             # ← TON USER
+        key: ${{ secrets.SSH_PRIVATE_KEY }}  # ← TA CLÉ
+        port: 2701                     # ← PORT 2701 FIXE
         script: |
           echo "🎯 Connexion SSH établie avec succès!"
           
@@ -56,4 +56,4 @@ jobs:
           echo "✅ Déploiement réussi!"
           echo "📊 Container status:"
           docker ps --filter "name=sasalm-app"
-          echo "🌐 Application disponible sur: http://${{ secrets.SSH_HOST }}"
+          echo "🌐 Application disponible sur: http://135.125.4.184"
