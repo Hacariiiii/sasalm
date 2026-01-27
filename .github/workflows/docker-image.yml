@@ -8,7 +8,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Build Docker image
+    - name: Build Docker imagee
       run: |
         echo "Building Docker image..."
         docker build -t test-image .
