@@ -1,66 +1,59 @@
-name: Build, Push and Deploy
+name: Deploy React App to Proxmox
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
 
 jobs:
-  deploy:
+  build-deploy:
     runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
     
-    - name: Build and Push to Docker Hubeeeeeeeeeeee
+    steps:
+    # 1. Récupérer le code
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    # 2. Construire l'image Docker
+    - name: Build Docker Image
       run: |
-        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/sasalm:${{ github.sha }} .
-        docker push ${{ secrets.DOCKER_USERNAME }}/sasalm:${{ github.sha }}
-        docker tag ${{ secrets.DOCKER_USERNAME }}/sasalm:${{ github.sha }} ${{ secrets.DOCKER_USERNAME }}/sasalm:latest
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/sasalm:latest .
+    
+    # 3. Pousser sur Docker Hub
+    - name: Push to Docker Hub
+      run: |
+        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
         docker push ${{ secrets.DOCKER_USERNAME }}/sasalm:latest
     
-    - name: Deploy to VM
+    # 4. Déployer sur Proxmox VM (avec MOT DE PASSE)
+    - name: Deploy to Proxmox VM
       uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        password: ${{ secrets.SSH_PASSWORD }}  # ← CHANGEMENT IMPORTANT
         port: ${{ secrets.SSH_PORT || 22 }}
         script: |
-          # Variables
-          IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/sasalm"
+          echo "🎯 Connexion SSH établie avec succès!"
           
-          # 1. Login Docker
+          # 1. Se connecter à Docker Hub
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
           
-          # 2. Pull latest image
-          docker pull $IMAGE_NAME:latest
+          # 2. Télécharger la dernière image
+          docker pull ${{ secrets.DOCKER_USERNAME }}/sasalm:latest
           
-          # 3. Stop and remove old container
-          docker compose down || true
+          # 3. Arrêter et supprimer l'ancien container
+          docker stop sasalm-app 2>/dev/null || true
+          docker rm sasalm-app 2>/dev/null || true
           
-          # 4. Create docker-compose.yml if not exists
-          cat > docker-compose.yml << 'EOF'
-          version: '3.8'
-          services:
-            sasalm:
-              image: $IMAGE_NAME:latest
-              container_name: sasalm-app
-              ports:
-                - "80:80"
-                - "443:443"
-              restart: unless-stopped
-              volumes:
-                - ./ssl:/etc/nginx/ssl
-          EOF
+          # 4. Lancer le nouveau container
+          docker run -d \
+            --name sasalm-app \
+            -p 80:80 \
+            --restart unless-stopped \
+            ${{ secrets.DOCKER_USERNAME }}/sasalm:latest
           
-          # 5. Replace image name in docker-compose
-          sed -i "s|\$IMAGE_NAME|$IMAGE_NAME|g" docker-compose.yml
-          
-          # 6. Start new container
-          docker compose up -d
-          
-          # 7. Cleanup
-          docker system prune -af --volumes
-          
-          echo "🚀 Application déployée avec succès!"
-          echo "🌐 Accédez à: http://${{ secrets.VM_HOST }}"
+          # 5. Vérification
+          echo "✅ Déploiement réussi!"
+          echo "📊 Container status:"
+          docker ps --filter "name=sasalm-app"
+          echo "🌐 Application disponible sur: http://${{ secrets.SSH_HOST }}"
