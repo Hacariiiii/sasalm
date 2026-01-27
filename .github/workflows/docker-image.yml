@@ -30,7 +30,7 @@ jobs:
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}  # ← CHANGEMENT IMPORTANT
+        key: ${{ secrets.SSH_PASSWORD }}  # ← CHANGEMENT IMPORTANT
         port: ${{ secrets.SSH_PORT || 22 }}
         script: |
           echo "🎯 Connexion SSH établie avec succès!"
