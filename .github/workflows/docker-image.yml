@@ -14,7 +14,7 @@ jobs:
       uses: actions/checkout@v4
     
     # 2. Construire l'image Docker
-    - name: Build Docker Imageeeeeeeeeee
+    - name: Build Docker Imageeeeeeeeeeeee
       run: |
         docker build -t ${{ secrets.DOCKER_USERNAME }}/sasalm:latest .
     
