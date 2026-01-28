@@ -46,11 +46,8 @@ jobs:
           docker rm sasalm-app 2>/dev/null || true
           
           # 4. Lancer le nouveau container
-          docker run -d \
-            --name sasalm-app \
-            -p 80:81 \
-            --restart unless-stopped \
-            ${{ secrets.DOCKER_USERNAME }}/sasalm:latest
+          docker compose up -d
+
           
           # 5. Vérification
           echo "✅ Déploiement réussi!"
