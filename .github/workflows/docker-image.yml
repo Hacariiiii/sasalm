@@ -48,7 +48,7 @@ jobs:
           # 4. Lancer le nouveau container
           docker run -d \
             --name sasalm-app \
-            -p 80:80 \
+            -p 80:81 \
             --restart unless-stopped \
             ${{ secrets.DOCKER_USERNAME }}/sasalm:latest
           
