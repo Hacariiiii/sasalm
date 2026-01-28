@@ -46,6 +46,10 @@ jobs:
           docker rm sasalm-app 2>/dev/null || true
           
           # 4. Lancer le nouveau container
+           cd ~/sasalm
+          docker compose up -d
+          docker compose down
+          docker compose pull
           docker compose up -d
 
           
