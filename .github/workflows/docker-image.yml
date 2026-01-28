@@ -47,7 +47,6 @@ jobs:
           
           # 4. Lancer le nouveau container
            cd ~/sasalm
-          docker compose up -d
           docker compose down
           docker compose pull
           docker compose up -d
