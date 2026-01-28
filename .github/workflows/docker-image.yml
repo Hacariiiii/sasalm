@@ -56,8 +56,5 @@ jobs:
           docker compose up -d 
 
           
-          # 5. Vérification
-          echo "✅ Déploiement réussi!"
-          echo "📊 Container status:"
-          docker ps --filter "name=sasalm-app"
-          echo "🌐 Application disponible sur: http://135.125.4.184"
+     
+        
