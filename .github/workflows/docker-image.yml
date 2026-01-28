@@ -28,7 +28,7 @@ jobs:
     - name: Deploy to Proxmox VM
       uses: appleboy/ssh-action@v1.0.0
       with:
-        host: "135.125.4.184"          # ← TON IP FIXE
+        host: ${{ secrets.SSH_HOST }}       # ← TON IP FIXE
         username: "tython"             # ← TON USER
         key: ${{ secrets.SSH_PRIVATE_KEY }}  # ← TA CLÉ
         port: 2701                     # ← PORT 2701 FIXE
