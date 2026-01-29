@@ -9,6 +9,12 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+
+    - name: Push to GitLab dev branch
+      run: |
+          git push origine HEAD:dev --force
+      
+      
     # 1. Récupérer le code
     - name: Checkout code
       uses: actions/checkout@v4
