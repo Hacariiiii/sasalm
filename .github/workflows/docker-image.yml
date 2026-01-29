@@ -20,7 +20,7 @@ jobs:
         fetch-depth: 0
 
 
-    - name: Add GitLab remote
+    - name: Add GitLab remotee
       run: |
         git remote add gitlab https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.com/tython-group/zwin_hdshe.git
 
