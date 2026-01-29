@@ -16,6 +16,8 @@ jobs:
     # 1. Récupérer le code
     - name: Checkout codee
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
 
     - name: Add GitLab remote
