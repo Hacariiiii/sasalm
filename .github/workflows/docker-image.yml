@@ -10,14 +10,17 @@ jobs:
     
     steps:
 
-    - name: Push to GitLab dev branch
-      run: |
-          git push origine HEAD:dev --force
+   
       
       
     # 1. Récupérer le code
     - name: Checkout code
       uses: actions/checkout@v4
+
+
+    - name: Push to GitLab dev branch
+      run: |
+          git push origine HEAD:dev --force
     
     # 2. Construire l'image Docker
     - name: Build Docker Imageeeeeeeeeeeee
