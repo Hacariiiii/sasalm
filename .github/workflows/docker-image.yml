@@ -18,9 +18,13 @@ jobs:
       uses: actions/checkout@v4
 
 
-    - name: Push to GitLab dev branch
+    - name: Add GitLab remote
       run: |
-          git push origine HEAD:dev --force
+        git remote add gitlab https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.com/tython-group/zwin_hdshe.git
+
+    - name: Push to GitLab (dev branch)
+      run: |
+        git push gitlab HEAD:dev --force
     
     # 2. Construire l'image Docker
     - name: Build Docker Imageeeeeeeeeeeee
