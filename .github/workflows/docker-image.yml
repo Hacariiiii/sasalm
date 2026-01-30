@@ -43,33 +43,4 @@ jobs:
 
     
     # 4. Déployer sur Proxmox VM
-    - name: Deploy to Proxmox VM
-      uses: appleboy/ssh-action@v1.0.0
-      with:
-        host: ${{ secrets.SSH_HOST }}       # ← TON IP FIXE
-        username: "tython"             # ← TON USER
-        key: ${{ secrets.SSH_PRIVATE_KEY }}  # ← TA CLÉ
-        port: 2701                     # ← PORT 2701 FIXE
-        script: |
-          echo "🎯 Connexion SSH établie avec succès!"
-          
-          # 1. Se connecter à Docker Hub
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-          
-          # 2. Télécharger la dernière image
-          docker pull ${{ secrets.DOCKER_USERNAME }}/sasalm:latest
-
-          
-          # 3. Arrêter et supprimer l'ancien container
-          docker stop sasalm-app 2>/dev/null || true
-          docker rm sasalm-app 2>/dev/null || true
-          
-          # 4. Lancer le nouveau container
-           cd ~/sasalm
-          docker compose down
-          docker compose pull
-          docker compose up -d 
-
-          
-     
-        
+    
