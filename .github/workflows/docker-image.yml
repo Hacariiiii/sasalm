@@ -26,6 +26,7 @@ jobs:
 
     - name: Push to GitLab (dev branch)
       run: |
+        git commit -m "salam"
         git push gitlab HEAD:dev --force
     
     # 2. Construire l'image Docker
