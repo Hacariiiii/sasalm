@@ -14,7 +14,7 @@ jobs:
       
       
     # 1. Récupérer le code
-    - name: Checkout codeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+    - name: Checkout codeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
